@@ -4,6 +4,8 @@
 #include <vector>
 #include <ctype.h>
 #include <map>
+#include <chrono>
+#include <omp.h>
 
 using namespace std;
 
@@ -21,8 +23,22 @@ int main()
     part2();
 }
 
+const map<string, int> digits = {
+    {"zero", 0},
+    {"one", 1},
+    {"two", 2},
+    {"three", 3},
+    {"four", 4},
+    {"five", 5},
+    {"six", 6},
+    {"seven", 7},
+    {"eight", 8},
+    {"nine", 9}};
+
 void part2()
 {
+
+    auto start = chrono::high_resolution_clock::now();
     // Read example file
     ifstream file("../d1/input");
     string line;
@@ -33,22 +49,11 @@ void part2()
         lines.push_back(line);
     }
 
-    map<string, int> digits = {
-        {"zero", 0},
-        {"one", 1},
-        {"two", 2},
-        {"three", 3},
-        {"four", 4},
-        {"five", 5},
-        {"six", 6},
-        {"seven", 7},
-        {"eight", 8},
-        {"nine", 9}};
-
     int sum = 0;
 
+#pragma omp parallel for reduction(+:sum) num_threads(8)
     for (int i = 0; i < lines.size(); i++)
-    {
+    {        
         // Find first and last number for each line
         string current = lines.at(i);
         vector<tuple<int, int>> vec;
@@ -92,6 +97,9 @@ void part2()
         sum += stoi(to_string(first) + to_string(last));
     }
 
+    auto end = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(end-start);
+    cout << duration.count() << endl;
     cout << sum << endl;
 }
 
