@@ -1,25 +1,21 @@
-cmake_minimum_required(VERSION 3.21)
-enable_language(CXX)
+cmake_minimum_required(VERSION 3.9)
 project(aoc23 LANGUAGES CXX)
+enable_language(CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+# Set compiler to clang++
+set(CMAKE_CXX_COMPILER clang++)
+
+#Echo current compiler
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
+
+set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-set(executables d1)
-set(executables d2)
-set(executables d3)
-
-find_package(OpenMP REQUIRED)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+set(executables d1 d2 d3 d4)
 
 foreach(executable ${executables})
     add_executable(${executable} "${executable}/main.cxx")
+    include_directories(${executable})
 endforeach()
-
-set(CMAKE_CXX_CLANG_TIDY
-    clang-tidy;
-    -checks=*;
-    -header-filter=.*;
-)

@@ -18,7 +18,7 @@ pair<int, int> get_first_of_num(int row, int col, vector<string>& lines) {
         start--;
     }
 
-    return pair(row, start);
+    return {row, start};
 }
 
 void neighbors(int row, int col, vector<string>& lines, set<pair<int,int>>& coords) {
